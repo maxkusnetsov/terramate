@@ -292,6 +292,8 @@ func (e *Engine) RunAll(
 						break tasksLoop
 					}
 					input, err := config.EvalInput(evalctx, in)
+          logger.Warn().Interface("input", input).Msg("input")
+          logger.Warn().Err(err).Msg("inputErr")
 					if err != nil {
 						errs.Append(errors.E(err, "failed to evaluate input block"))
 						opts.Hooks.After(e, cloudRun, RunResult{ExitCode: -1}, errors.E(ErrRunCommandNotExecuted, err))
@@ -303,6 +305,8 @@ func (e *Engine) RunAll(
 						break tasksLoop
 					}
 					otherStack, found, err := e.stackManager().StackByID(input.FromStackID)
+          logger.Warn().Interface("otherStack", otherStack).Msg("otherStack")
+          logger.Warn().Err(err).Msg("otherStackErr")
 					if err != nil {
 						errs.Append(errors.E(err, "populating stack inputs from stack.id %s", input.FromStackID))
 						opts.Hooks.After(e, cloudRun, RunResult{ExitCode: -1}, errors.E(ErrRunCommandNotExecuted, err))
@@ -319,6 +323,7 @@ func (e *Engine) RunAll(
 							run.Stack.Dir,
 							input.FromStackID)
 
+            logger.Warn().Err(err).Msg("not found")
 						errs.Append(err)
 
 						opts.Hooks.After(e, cloudRun, RunResult{ExitCode: -1}, errors.E(ErrRunCommandNotExecuted, err))
@@ -330,7 +335,7 @@ func (e *Engine) RunAll(
 						break tasksLoop
 					}
 
-					logger.Debug().Msgf("Stack depends on outputs from stack %s", otherStack.Dir)
+					logger.Warn().Msgf("Stack depends on outputs from stack %s", otherStack.Dir)
 
 					backend, ok := cfg.SharingBackend(input.Backend)
 					if !ok {
@@ -344,10 +349,6 @@ func (e *Engine) RunAll(
 						}
 						break tasksLoop
 					}
-
-          logger := logger.With().
-				    Str("action", "outputsVal").
-				    Logger()
 
 					stackOutputs, _ := allOutputs.GetOrInit(otherStack.Dir.String(), func() (*runutil.OnceMap[string, cty.Value], error) {
 						return runutil.NewOnceMap[string, cty.Value](), nil
