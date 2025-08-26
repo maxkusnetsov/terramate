@@ -631,6 +631,11 @@ func newEnvironFrom(stackEnviron []string) []string {
 	environ := make([]string, len(os.Environ()))
 	copy(environ, os.Environ())
 	environ = append(environ, stackEnviron...)
+  logger := log.With().
+		Str("action", "newEnvironFrom").
+		Logger()
+
+  logger.Warn().Stack().Interface("environ", environ).Msg("environ")
 	return environ
 }
 

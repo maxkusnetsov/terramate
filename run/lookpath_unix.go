@@ -13,11 +13,9 @@ import (
 	"path/filepath"
 	"strings"
 	"syscall"
-  "fmt"
 
 	"golang.org/x/sys/unix"
 
-  "github.com/rs/zerolog/log"
 	"github.com/terramate-io/terramate/errors"
 )
 
@@ -37,10 +35,6 @@ func LookPath(file string, environ []string) (string, error) {
 	// (only bypass the path if file begins with / or ./ or ../)
 	// but that would not match all the Unix shells.
 
-  logger := log.With().
-		Str("action", "lookPath").
-		Logger()
-
 	if strings.Contains(file, "/") {
 		err := findExecutable(file)
 		if err == nil {
@@ -49,19 +43,14 @@ func LookPath(file string, environ []string) (string, error) {
 		return "", errors.E(ErrNotFound, err, file)
 	}
 	path, _ := Getenv("PATH", environ)
-  logger.Warn().Stack().Msgf("path from env: %s", path)
 	for _, dir := range filepath.SplitList(path) {
-    logger.Warn().Msgf("dir to check: %s", dir)
 		if dir == "" {
 			// Unix shell semantics: path element "" means "."
 			dir = "."
 		}
 		path := filepath.Join(dir, file)
 		if err := findExecutable(path); err == nil {
-   		logger.Warn().Msg(fmt.Sprintf("found executable at %s", path))
 			return path, nil
-		} else {
-   		logger.Warn().Err(err).Msg(fmt.Sprintf("can't find executable at %s", path))
     }
 	}
 	return "", errors.E(ErrNotFound, file)
