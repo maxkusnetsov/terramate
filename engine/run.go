@@ -401,7 +401,7 @@ func (e *Engine) RunAll(
 
 							}
 							inputVal, err = json.Unmarshal(stdoutBytes, typ)
-              logger.Warn().Interface("inputVal", stackOutputs).Msg("inputValMarshalled")
+              logger.Warn().Interface("inputVal", inputVal).Msg("inputValMarshalled")
 
 							if err != nil {
                 logger.Warn().Err(err).Msg("unmarshalingErr")
