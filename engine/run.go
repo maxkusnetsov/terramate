@@ -411,6 +411,13 @@ func (e *Engine) RunAll(
 
 					evalctx.SetNamespaceRaw("outputs", outputsVal)
 					inputVal, inputErr := input.Value(evalctx)
+
+          loggerInput := logger.With().
+				    Str("action", "evalctx").
+				    Logger()
+
+          loggerInput.Warn().Interface("evalctx", evalctx).Msg("evalctx")
+
 					mockVal, mockFound, mockErr := input.Mock(evalctx)
 
 					if inputErr != nil {
@@ -632,11 +639,6 @@ func newEnvironFrom(stackEnviron []string) []string {
 	environ := make([]string, len(os.Environ()))
 	copy(environ, os.Environ())
 	environ = append(environ, stackEnviron...)
-  logger := log.With().
-		Str("action", "newEnvironFrom").
-		Logger()
-
-  logger.Warn().Stack().Interface("environ", environ).Msg("environ")
 	return environ
 }
 
