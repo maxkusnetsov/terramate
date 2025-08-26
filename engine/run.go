@@ -409,8 +409,16 @@ func (e *Engine) RunAll(
 						break tasksLoop
 					}
 
+          logger := logger.With().
+				    Str("action", "outputsVal").
+				    Logger()
+
+          logger.Warn().Err(err).Msg("outputsErr")
+          logger.Warn().Interface("outputsVal", outputsVal).Msg("outputsVal")
 					evalctx.SetNamespaceRaw("outputs", outputsVal)
 					inputVal, inputErr := input.Value(evalctx)
+          logger.Warn().Err(inputErr).Msg("inputErr")
+          logger.Warn().Interface("inputsVal", inputVal).Msg("inputVal")
 
 					mockVal, mockFound, mockErr := input.Mock(evalctx)
 
