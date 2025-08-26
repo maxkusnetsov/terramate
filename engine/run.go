@@ -387,7 +387,8 @@ func (e *Engine) RunAll(
 						} else {
 							stdoutBytes := stdout.Bytes()
 							typ, err := json.ImpliedType(stdoutBytes)
-              logger.Warn().Msgf("inputType: %s", typ)
+              //typMars, _ := json.Marshal(typ, json.ImpliedType);
+              //logger.Warn().Str("type", string(typMars))
 							if err != nil {
                 logger.Warn().Err(err).Msg("typeErr")
 								err := errors.E(err, "unmashaling sharing_backend output")
@@ -402,7 +403,7 @@ func (e *Engine) RunAll(
 
 							}
 							inputVal, err = json.Unmarshal(stdoutBytes, typ)
-              logger.Warn().Msgf("inputVal: %s", inputVal)
+              logger.Warn().RawJSON("input", stdoutBytes)
 
 							if err != nil {
                 logger.Warn().Err(err).Msg("unmarshalingErr")
