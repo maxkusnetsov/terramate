@@ -354,6 +354,7 @@ func (e *Engine) RunAll(
 						return runutil.NewOnceMap[string, cty.Value](), nil
 					})
 
+          logger.Warn().Interface("allOutputs", allOutputs).Msg("allOutputs")
           logger.Warn().Interface("stackOutputs", stackOutputs).Msg("stackOutputs")
 
 					outputsVal, err := stackOutputs.GetOrInit(backend.Name, func() (cty.Value, error) {
@@ -366,6 +367,7 @@ func (e *Engine) RunAll(
 						var inputVal cty.Value
 						err := cmd.Run()
 						if err != nil {
+              logger.Warn().Err(err).Msg("cmdRunErr")
 							if !task.MockOnFail {
 								err := errors.E(err, "failed to execute: (cmd: %s) (stdout: %s) (stderr: %s)", cmd.String(), stdout.String(), stderr.String())
 								errs.Append(err)
@@ -386,6 +388,7 @@ func (e *Engine) RunAll(
 							stdoutBytes := stdout.Bytes()
 							typ, err := json.ImpliedType(stdoutBytes)
 							if err != nil {
+                logger.Warn().Err(err).Msg("typeErr")
 								err := errors.E(err, "unmashaling sharing_backend output")
 								errs.Append(err)
 								opts.Hooks.After(e, cloudRun, RunResult{ExitCode: -1}, errors.E(ErrRunCommandNotExecuted, err))
@@ -398,7 +401,10 @@ func (e *Engine) RunAll(
 
 							}
 							inputVal, err = json.Unmarshal(stdoutBytes, typ)
+              logger.Warn().Interface("inputVal", stackOutputs).Msg("inputValMarshalled")
+
 							if err != nil {
+                logger.Warn().Err(err).Msg("unmarshalingErr")
 								err := errors.E(err, "unmashaling sharing_backend output")
 								errs.Append(err)
 								opts.Hooks.After(e, cloudRun, RunResult{ExitCode: -1}, errors.E(ErrRunCommandNotExecuted, err))
