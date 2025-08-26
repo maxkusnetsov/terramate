@@ -49,15 +49,16 @@ func LookPath(file string, environ []string) (string, error) {
 		return "", errors.E(ErrNotFound, err, file)
 	}
 	path, _ := Getenv("PATH", environ)
-  logger.Warn().Msg(path)
+  logger.Warn().Stack().Msgf("path from env: %s", path)
 	for _, dir := range filepath.SplitList(path) {
-    logger.Warn().Msg(dir)
+    logger.Warn().Msgf("dir to check: %s", dir)
 		if dir == "" {
 			// Unix shell semantics: path element "" means "."
 			dir = "."
 		}
 		path := filepath.Join(dir, file)
 		if err := findExecutable(path); err == nil {
+   		logger.Warn().Msg(fmt.Sprintf("found executable at %s", path))
 			return path, nil
 		} else {
    		logger.Warn().Err(err).Msg(fmt.Sprintf("can't find executable at %s", path))
