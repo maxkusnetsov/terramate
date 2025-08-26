@@ -49,9 +49,9 @@ func LookPath(file string, environ []string) (string, error) {
 		return "", errors.E(ErrNotFound, err, file)
 	}
 	path, _ := Getenv("PATH", environ)
-  logger.Warn().Msg(os.Getenv("PATH"))
   logger.Warn().Msg(path)
 	for _, dir := range filepath.SplitList(path) {
+    logger.Warn().Msg(dir)
 		if dir == "" {
 			// Unix shell semantics: path element "" means "."
 			dir = "."
