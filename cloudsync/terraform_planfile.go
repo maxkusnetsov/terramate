@@ -131,6 +131,7 @@ func runTerraformShow(e *engine.Engine, run engine.StackCloudRun, flags ...strin
 		cmdName = "terraform"
 	}
 
+  loggerShow.Warn().Interface("Run env", run.Env)
 	cmdPath, err := runpkg.LookPath(cmdName, run.Env)
 
 	if err != nil {
