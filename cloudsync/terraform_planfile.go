@@ -108,6 +108,10 @@ func sanitizeJSONPlan(jsonPlanBytes []byte) ([]byte, error) {
 }
 
 func runTerraformShow(e *engine.Engine, run engine.StackCloudRun, flags ...string) (string, error) {
+  loggerShow := log.With().
+		Str("action", "runTerraformShow").
+		Logger()
+
 	var stdout, stderr bytes.Buffer
 
 	planfile := run.Task.CloudPlanFile
@@ -128,7 +132,10 @@ func runTerraformShow(e *engine.Engine, run engine.StackCloudRun, flags ...strin
 	}
 
 	cmdPath, err := runpkg.LookPath(cmdName, run.Env)
+
 	if err != nil {
+    loggerShow.Warn().Msg(cmdPath)
+    loggerShow.Warn().Err(err)
 		return "", errors.E(clitest.ErrCloudTerraformPlanFile, "looking up executable for %s: %w", cmdName, err)
 	}
 
