@@ -292,8 +292,6 @@ func (e *Engine) RunAll(
 						break tasksLoop
 					}
 					input, err := config.EvalInput(evalctx, in)
-          logger.Warn().Interface("input", input).Msg("input")
-          logger.Warn().Err(err).Msg("inputErr")
 					if err != nil {
 						errs.Append(errors.E(err, "failed to evaluate input block"))
 						opts.Hooks.After(e, cloudRun, RunResult{ExitCode: -1}, errors.E(ErrRunCommandNotExecuted, err))
@@ -403,7 +401,7 @@ func (e *Engine) RunAll(
 
 							}
 							inputVal, err = json.Unmarshal(stdoutBytes, typ)
-              logger.Warn().RawJSON("input", stdoutBytes)
+              logger.Warn().RawJSON("input", stdoutBytes).Msg("input")
 
 							if err != nil {
                 logger.Warn().Err(err).Msg("unmarshalingErr")
