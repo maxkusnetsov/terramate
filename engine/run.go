@@ -345,9 +345,15 @@ func (e *Engine) RunAll(
 						break tasksLoop
 					}
 
+          logger := logger.With().
+				    Str("action", "outputsVal").
+				    Logger()
+
 					stackOutputs, _ := allOutputs.GetOrInit(otherStack.Dir.String(), func() (*runutil.OnceMap[string, cty.Value], error) {
 						return runutil.NewOnceMap[string, cty.Value](), nil
 					})
+
+          logger.Warn().Interface("stackOutputs", stackOutputs).Msg("stackOutputs")
 
 					outputsVal, err := stackOutputs.GetOrInit(backend.Name, func() (cty.Value, error) {
 						var stdout bytes.Buffer
@@ -407,11 +413,7 @@ func (e *Engine) RunAll(
 					})
 					if err != nil {
 						break tasksLoop
-					}
-
-          logger := logger.With().
-				    Str("action", "outputsVal").
-				    Logger()
+					} 
 
           logger.Warn().Err(err).Msg("outputsErr")
           logger.Warn().Interface("outputsVal", outputsVal).Msg("outputsVal")
