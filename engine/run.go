@@ -412,12 +412,6 @@ func (e *Engine) RunAll(
 					evalctx.SetNamespaceRaw("outputs", outputsVal)
 					inputVal, inputErr := input.Value(evalctx)
 
-          loggerInput := logger.With().
-				    Str("action", "evalctx").
-				    Logger()
-
-          loggerInput.Warn().Interface("evalctx", evalctx).Msg("evalctx")
-
 					mockVal, mockFound, mockErr := input.Mock(evalctx)
 
 					if inputErr != nil {
