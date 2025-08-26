@@ -276,6 +276,7 @@ func (e *Engine) RunAll(
 
 			cfg, _ := e.Config().Lookup(run.Stack.Dir)
 			environ := newEnvironFrom(stackEnvs[run.Stack.Dir])
+			cloudRun.Env = environ
 
 			if task.EnableSharing {
 				for _, in := range cfg.Node.Inputs {
