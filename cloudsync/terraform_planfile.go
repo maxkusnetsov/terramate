@@ -134,8 +134,8 @@ func runTerraformShow(e *engine.Engine, run engine.StackCloudRun, flags ...strin
 	cmdPath, err := runpkg.LookPath(cmdName, run.Env)
 
 	if err != nil {
-    loggerShow.Warn().Msg(cmdPath)
-    loggerShow.Warn().Err(err)
+    loggerShow.Warn().Msgf("Path we received: %s", cmdPath)
+    loggerShow.Warn().Err(err).Msg("")
 		return "", errors.E(clitest.ErrCloudTerraformPlanFile, "looking up executable for %s: %w", cmdName, err)
 	}
 
