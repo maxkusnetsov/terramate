@@ -385,6 +385,13 @@ func (e *Engine) RunAll(
 							)
 						} else {
 							stdoutBytes := stdout.Bytes()
+              stderrBytes := stderr.Bytes()
+
+              logger.Warn().Int("stdoutLen", len(stdoutBytes)).Msg("stdoutLen")
+              logger.Warn().Int("stderrLen", len(stderrBytes)).Msg("stderrLen")
+              logger.Warn().Str("stdout", string(stdoutBytes)).Msg("stdout")
+              logger.Warn().Str("stderr", string(stderrBytes)).Msg("stderr")
+
 							typ, err := json.ImpliedType(stdoutBytes)
               //typMars, _ := json.Marshal(typ, json.ImpliedType);
               //logger.Warn().Str("type", string(typMars))
