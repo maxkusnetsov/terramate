@@ -362,6 +362,7 @@ func (e *Engine) RunAll(
 						cmd.Stdout = &stdout
 						cmd.Stderr = &stderr
 						cmd.Dir = otherStack.HostDir(e.Config())
+            logger.Warn().Interface("cmd", cmd).Msg("cmd")
 						var inputVal cty.Value
 						err := cmd.Run()
 						if err != nil {
