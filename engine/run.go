@@ -363,7 +363,9 @@ func (e *Engine) RunAll(
 						cmd.Stderr = &stderr
 						cmd.Dir = otherStack.HostDir(e.Config())
             cmd.Env = environ
-            logger.Warn().Interface("dir", cmd.Dir).Msg("cmddir")
+            logger.Warn().Interface("dir", cmd.Dir).Msg("cmddirShared")
+            logger.Warn().Interface("cmd", backend.Command).Msg("cmdShared")
+            logger.Warn().Interface("env", cmd.Env).Msg("envShared")
 						var inputVal cty.Value
 						err := cmd.Run()
 						if err != nil {
@@ -484,6 +486,11 @@ func (e *Engine) RunAll(
 			cmd := exec.Command(cmdPath, task.Cmd[1:]...)
 			cmd.Dir = run.Stack.HostDir(e.Config())
 			cmd.Env = environ
+
+      logger.Warn().Str("cmdPath", cmdPath).Msg("cmdPathGlobal")
+      logger.Warn().Interface("dir", cmd.Dir).Msg("cmddirGlobal")
+      logger.Warn().Interface("cmd", task.Cmd).Msg("cmdGlobal")
+      logger.Warn().Interface("env", cmd.Env).Msg("envGlobal")
 
 			var logSyncer *cloud.LogSyncer
 			if e.IsCloudEnabled() && opts.Hooks.LogSyncCondition(task, run) {
