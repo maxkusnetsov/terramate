@@ -362,8 +362,8 @@ func (e *Engine) RunAll(
 						cmd.Stdout = &stdout
 						cmd.Stderr = &stderr
 						cmd.Dir = otherStack.HostDir(e.Config())
-            cmd.Env = environ
-            cmd.Env['GITLAB_TOFU_STATE_NAME'] = otherStack.ID
+            cmd.Env = environ[:len(environ) - 1]
+            cmd.Env = append(cmd.Env, fmt.Sprintf("GITLAB_TOFU_STATE_NAME=%s", otherStack.ID))
             logger.Warn().Interface("dir", cmd.Dir).Msg("cmddirShared")
             logger.Warn().Interface("cmd", backend.Command).Msg("cmdShared")
             logger.Warn().Interface("env", cmd.Env).Msg("envShared")
